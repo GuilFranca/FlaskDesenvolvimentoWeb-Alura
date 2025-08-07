@@ -1,0 +1,8 @@
+# Ignorar arquivos de cache do Python
+__pycache__
+
+# Ignorar o ambiente virtual
+.venv
+
+# Ignorara os arquivos .idea
+.idea

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask_sqlalchemy import sqlalchemy
 
 class Jogo:
     def __init__(self, nome, categoria, console):
@@ -29,9 +30,23 @@ usuarios = {
     usuario3.nickname : usuario3
 }
 
+# Instancia do Flask
 app = Flask(__name__)
-
 app.secret_key = 'alura'
+
+# Criando uma variável para a nossa aplicação
+# URI (Identificador Uniforme de Recurso) é um padrão para identificar recursos na internet
+app.config['SQLAlchemy_DATABASE_URI'] = \
+    '{SGBD}://{usuario}:{senha}@{servidor}/{database}'.format(
+        SGBD = 'mysql+mysqlconnector'
+        usuario = 'root'
+        senha = 'Magnemite_EM1'
+        servidor = 'localhost'
+        database = 'jogoteca'
+    )
+
+# Instancia banco de dados SQLAlchemy
+db = SQLAlchemy(app)
 
 @app.route("/")
 def index():

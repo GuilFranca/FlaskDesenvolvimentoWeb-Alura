@@ -38,10 +38,10 @@ app.secret_key = 'alura'
 # URI (Identificador Uniforme de Recurso) é um padrão para identificar recursos na internet
 app.config['SQLAlchemy_DATABASE_URI'] = \
     '{SGBD}://{usuario}:{senha}@{servidor}/{database}'.format(
-        SGBD = 'mysql+mysqlconnector'
-        usuario = 'root'
-        senha = 'Magnemite_EM1'
-        servidor = 'localhost'
+        SGBD = 'mysql+mysqlconnector',
+        usuario = 'root',
+        senha = 'Magnemite_EM1',
+        servidor = 'localhost',
         database = 'jogoteca'
     )
 

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
-from flask_sqlalchemy import sqlalchemy
+from flask_sqlalchemy import SQLAlchemy
 
 class Jogo:
     def __init__(self, nome, categoria, console):
@@ -36,7 +36,7 @@ app.secret_key = 'alura'
 
 # Criando uma variável para a nossa aplicação
 # URI (Identificador Uniforme de Recurso) é um padrão para identificar recursos na internet
-app.config['SQLAlchemy_DATABASE_URI'] = \
+app.config['SQLALCHEMY_DATABASE_URI'] = \
     '{SGBD}://{usuario}:{senha}@{servidor}/{database}'.format(
         SGBD = 'mysql+mysqlconnector',
         usuario = 'root',
@@ -46,7 +46,30 @@ app.config['SQLAlchemy_DATABASE_URI'] = \
     )
 
 # Instancia banco de dados SQLAlchemy
+# db = sqlalchemy(app)
 db = SQLAlchemy(app)
+
+# Classe model ponte com banco de dados Jogos
+class Jogos(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome = db.Column(db.String(50), nullable=False)
+    categoria = db.Column(db.String(40), nullable=False)
+    console = db.Column(db.String(20), nullable=False)
+
+    # Função repr
+    def __repr__(self):
+        return '<Name %r>' % self.nome
+
+
+# Classe model ponte com banco de dados Usuarios
+class Usuarios(db.Model):
+    nickname = db.Column(db.String(8), primary_key=True)
+    nome = db.Column(db.String(20), nullable=False)
+    senha = db.Column(db.String(100), nullable=False)
+
+    # Função repr
+    def __repr__(self):
+        return '<Name %r>' % self.nome
 
 @app.route("/")
 def index():

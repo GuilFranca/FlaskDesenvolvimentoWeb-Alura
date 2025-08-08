@@ -18,7 +18,6 @@ def novo():
         return redirect(url_for('login', proxima=url_for('novo')))
     return render_template('novo.html', titulo='Novo Jogo')
 
-
 @app.route("/criar", methods=['GET', 'POST'])
 def criar():
     nome = request.form['nome']
@@ -43,6 +42,15 @@ def criar():
     # Com url_for passamos a função que instância a página em questão
     return redirect(url_for('index'))
 
+@app.route("/editar")
+def editar():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('editar')))
+    return render_template('editar.html', titulo='Editando Jogo')
+
+@app.route("/atualizar", methods=['GET', 'POST'])
+def atualizar():
+    pass
 
 @app.route('/login')
 def login():

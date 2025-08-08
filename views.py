@@ -40,8 +40,10 @@ def criar():
 
     # Variável responsável por receber a imagem enviada pelo input type file
     arquivo = request.files['arquivo']
-    # irá salvar na pasta de uploads com o nome que o arquivo tem quando enviado.
-    arquivo.save(f'uploads/{arquivo.filename}')
+    # Importa o caminho do arquivo de configurações
+    upload_path = app.config['UPLOAD_PATH']
+    # Utilizaremos o id do próprio jogo para inserir a imagem com um nome melhor para ser trabalhado
+    arquivo.save(f'{upload_path}/capa{novo_jogo.id}.jpg')
 
     # Redireciona para a página em questão
     # Com url_for passamos a função que instância a página em questão

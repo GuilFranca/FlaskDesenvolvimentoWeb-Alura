@@ -1,3 +1,5 @@
+import os
+
 SECRET_KEY = 'alura'
 
 # Configuração da nossa aplicação
@@ -11,3 +13,7 @@ SQLALCHEMY_DATABASE_URI = \
         servidor = 'localhost',
         database = 'jogoteca'
     )
+
+# __file__ é uma forma de escrever uma referencia do porprio arquivo
+# .dirname devolve o caminho do diretorio colocado dentro do mesmo
+UPLOAD_PATH = os.path.dirname(os.path.abspath(__file__)) + '/uploads'

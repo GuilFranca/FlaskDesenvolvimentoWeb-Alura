@@ -46,20 +46,39 @@ def criar():
 @app.route("/editar/<int:id>")
 def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect(url_for('login', proxima=url_for('editar')))
+        # Como editar é uma rota dinâmica é necessário enviar o id junto
+        return redirect(url_for('login', proxima=url_for('editar', id = id)))
     # Query para encontrar o jogo pelo id e associar a variável jogo ao jogo em questão
     jogo = Jogos.query.filter_by(id=id).first()
     return render_template('editar.html', titulo='Editando Jogo', jogo=jogo)
 
 @app.route("/atualizar", methods=['GET', 'POST'])
 def atualizar():
-    pass
+    # jogo = pesquisa na tabela jogo pelo id
+    jogo = Jogos.query.filter_by(id=request.form['id']).first()
+
+    # Atualizar o valor presente no jogo pelo inserido na rota /editar
+    jogo.nome = request.form['nome']
+    jogo.categoria = request.form['categoria']
+    jogo.console = request.form['console']
+
+    db.session.add(jogo)
+    db.session.commit()
+
+    flash(f'Jogo {jogo.nome} atualizado com sucesso')
+
+    return redirect(url_for('index'))
 
 @app.route('/login')
 def login():
     proxima = request.args.get('proxima')
-    return render_template('login.html', proxima = proxima)
+    
+    # Se não houver uma especificação para próxima página, a próxima será a página index
+    if proxima == None:
+        proxima = url_for('index')
 
+    return render_template('login.html', proxima = proxima)
+    
 
 @app.route('/autenticar', methods=['GET', 'POST'])
 def autenticar():

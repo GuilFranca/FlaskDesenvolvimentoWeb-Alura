@@ -29,7 +29,7 @@ class Jogos(db.Model):
 
     # Função repr
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Name %r>' % self.nome
 
 
 # Classe model ponte com banco de dados Usuarios
@@ -40,10 +40,15 @@ class Usuarios(db.Model):
 
     # Função repr
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Name %r>' % self.nome
 
 @app.route("/")
 def index():
+    # Jogos representa uma tabela do banco de dados, cada objeto dessa class é uma linha na tabela
+    # .query é um método que inicia uma consulta ao banco de dados
+    # .order_by(Jogos.id) é um método que organiza a ordem dos resultados pelo id dos jogos
+    # O resultado desta consulta é uma lista de jogos
+    listaJogos = Jogos.query.order_by(Jogos.id)
     return render_template('lista.html', titulo='Jogos', jogos=listaJogos)
 
 
@@ -59,10 +64,21 @@ def criar():
     nome = request.form['nome']
     categoria = request.form['categoria']
     console = request.form['console']
-    jogo = Jogo(nome, categoria, console)
 
-    listaJogos.append(jogo)
+    # Realiza a verificação se já existe um jogo com o nome inserido
+    jogo = Jogos.query.filter_by(nome = nome).first()
 
+    # Se já houver um jogo com este nome, será exibido uma mensagem avisando isso e a página será redirecionada para a página index
+    if jogo:
+        flash('Jogo já existente!')
+        return redirect(url_for('index'))
+    
+    novo_jogo = Jogos(nome=nome, categoria=categoria, console=console)
+    # instanciação do SQLAlchemy adicionar o novo jogo
+    db.session.add(novo_jogo)
+    # Commita no banco de dados
+    db.session.commit()
+    
     # Redireciona para a página em questão
     # Com url_for passamos a função que instância a página em questão
     return redirect(url_for('index'))
@@ -76,8 +92,12 @@ def login():
 
 @app.route('/autenticar', methods=['GET', 'POST'])
 def autenticar():
-    if request.form['usuario'] in usuarios:
-        usuario = usuarios[request.form['usuario']]
+    # Usuarios representa a tabela usuários
+    # será realizada uma query utlizando um filtro de nickname
+    # Caso exista um nickname do mesmo a variável usuario sera True, caso contrário a variável será False
+    # a variável usuario recebera a consulta com o nickname pesquisado virando o objeto desse usuário
+    usuario = Usuarios.query.filter_by(nickname=request.form['usuario']).first()
+    if usuario:
         if request.form['senha'] == usuario.senha:
             session['usuario_logado'] = usuario.nickname
             # Mensagem de logado com sucesso

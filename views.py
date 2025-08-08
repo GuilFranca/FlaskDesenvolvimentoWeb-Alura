@@ -37,7 +37,12 @@ def criar():
     db.session.add(novo_jogo)
     # Commita no banco de dados
     db.session.commit()
-    
+
+    # Variável responsável por receber a imagem enviada pelo input type file
+    arquivo = request.files['arquivo']
+    # irá salvar na pasta de uploads com o nome que o arquivo tem quando enviado.
+    arquivo.save(f'uploads/{arquivo.filename}')
+
     # Redireciona para a página em questão
     # Com url_for passamos a função que instância a página em questão
     return redirect(url_for('index'))

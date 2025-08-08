@@ -42,11 +42,14 @@ def criar():
     # Com url_for passamos a função que instância a página em questão
     return redirect(url_for('index'))
 
-@app.route("/editar")
-def editar():
+# Captura de variável pela rota <int:id>
+@app.route("/editar/<int:id>")
+def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('editar')))
-    return render_template('editar.html', titulo='Editando Jogo')
+    # Query para encontrar o jogo pelo id e associar a variável jogo ao jogo em questão
+    jogo = Jogos.query.filter_by(id=id).first()
+    return render_template('editar.html', titulo='Editando Jogo', jogo=jogo)
 
 @app.route("/atualizar", methods=['GET', 'POST'])
 def atualizar():

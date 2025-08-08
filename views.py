@@ -69,6 +69,25 @@ def atualizar():
 
     return redirect(url_for('index'))
 
+@app.route('/deletar/<int:id>')
+def deletar(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        # Como editar é uma rota dinâmica é necessário enviar o id junto
+        return redirect(url_for('login', proxima=url_for('deletar', id = id)))
+    
+
+    Jogos.query.filter_by(id=id).delete()
+    # jogo = Jogos.query.filter_by(id=id).first()
+    # nome_jogo_deletado = jogo.nome
+
+    # db.session.remove(jogo)
+    db.session.commit()
+
+    flash('Jogo deletado com sucesso!')
+
+    return redirect(url_for('index'))
+
+
 @app.route('/login')
 def login():
     proxima = request.args.get('proxima')

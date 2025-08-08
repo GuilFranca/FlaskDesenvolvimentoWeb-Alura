@@ -1,35 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 
-class Jogo:
-    def __init__(self, nome, categoria, console):
-        self.nome = nome
-        self.categoria = categoria
-        self.console = console
-
-jogo1 = Jogo('Tetris', 'Puzzle', 'Atari')
-jogo2 = Jogo('God of War', 'Rack n Slash', 'PS2')
-jogo3 = Jogo('Mortal Kombat', 'Luta', 'PS2')
-jogo4 = Jogo('Pokémon', 'RPG', 'Nintendo DS')
-
-listaJogos = [jogo1, jogo2, jogo3, jogo4]
-
-class Usuario:
-    def __init__(self, nome, nickname, senha):
-        self.nome = nome
-        self.nickname = nickname
-        self.senha = senha
-
-usuario1 = Usuario('Guilherme França Fernades', 'Guil', '369852')
-usuario2 = Usuario('Sérgio José Fernandes da Silva', 'Serjão', '060581')
-usuario3 = Usuario('Heitor França Fernades', 'Heitoras', '260709')
-
-usuarios = {
-    usuario1.nickname : usuario1, 
-    usuario2.nickname : usuario2, 
-    usuario3.nickname : usuario3
-}
-
 # Instancia do Flask
 app = Flask(__name__)
 app.secret_key = 'alura'
@@ -58,7 +29,7 @@ class Jogos(db.Model):
 
     # Função repr
     def __repr__(self):
-        return '<Name %r>' % self.nome
+        return '<Name %r>' % self.name
 
 
 # Classe model ponte com banco de dados Usuarios
@@ -69,7 +40,7 @@ class Usuarios(db.Model):
 
     # Função repr
     def __repr__(self):
-        return '<Name %r>' % self.nome
+        return '<Name %r>' % self.name
 
 @app.route("/")
 def index():

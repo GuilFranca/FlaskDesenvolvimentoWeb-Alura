@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, session, flash, url_for
+from flask import render_template, request, redirect, session, flash, url_for, send_from_directory
 from jogoteca import app, db
 from models import Jogos, Usuarios
 
@@ -133,3 +133,7 @@ def logout():
 
 # for jogo in listaJogos:
 #     print(jogo.nome)
+
+@app.route('/uploads<nome_arquivo>')
+def imagem(nome_arquivo):
+    return send_from_directory('uploads', nome_arquivo)

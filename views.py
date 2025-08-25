@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, session, flash, url_for, send_from_directory
 from jogoteca import app, db
 from models import Jogos, Usuarios
+from helpers import recupera_imagem
 
 @app.route("/")
 def index():
@@ -57,7 +58,9 @@ def editar(id):
         return redirect(url_for('login', proxima=url_for('editar', id = id)))
     # Query para encontrar o jogo pelo id e associar a variável jogo ao jogo em questão
     jogo = Jogos.query.filter_by(id=id).first()
-    return render_template('editar.html', titulo='Editando Jogo', jogo=jogo)
+    # função de procura de imagem da capa do jogo
+    capa_jogo = recupera_imagem(id)
+    return render_template('editar.html', titulo='Editando Jogo', jogo=jogo, capa_jogo=capa_jogo)
 
 @app.route("/atualizar", methods=['GET', 'POST'])
 def atualizar():
@@ -71,6 +74,13 @@ def atualizar():
 
     db.session.add(jogo)
     db.session.commit()
+
+    # Variável responsável por receber a imagem enviada pelo input type file
+    arquivo = request.files['arquivo']
+    # Importa o caminho do arquivo de configurações
+    upload_path = app.config['UPLOAD_PATH']
+    # Utilizaremos o id do próprio jogo para inserir a imagem com nome do seu id em questão
+    arquivo.save(f'{upload_path}/capa{jogo.id}.jpg')
 
     flash(f'Jogo {jogo.nome} atualizado com sucesso')
 
